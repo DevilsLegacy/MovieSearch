@@ -15,7 +15,7 @@ import retrofit2.Response;
 
 public class MovieActivity extends Activity {
     private static final String TAG = "DEVIL";
-    private static final String TMDB_API_KEY = "";
+    private static final String TMDB_API_KEY = "4be57921a8785f27e19252173caec7fe";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
