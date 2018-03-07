@@ -27,8 +27,8 @@ public class MovieActivity extends Activity {
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                Log.e(TAG, "respose status: "+ response.headers().get("status"));
-                Log.e(TAG, "respose value: "+ String.valueOf(response.body().getTotalPages()));
+                Log.e(TAG, "response status: "+ response.headers().get("status"));
+                Log.e(TAG, "response value: "+ String.valueOf(response.body().getTotalPages()));
             }
 
             @Override
