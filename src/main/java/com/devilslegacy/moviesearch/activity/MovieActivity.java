@@ -2,12 +2,18 @@ package com.devilslegacy.moviesearch.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.devilslegacy.moviesearch.R;
+import com.devilslegacy.moviesearch.adapters.MoviesAdapter;
+import com.devilslegacy.moviesearch.model.Movie;
 import com.devilslegacy.moviesearch.model.MoviesResponse;
 import com.devilslegacy.moviesearch.rest.ApiClient;
 import com.devilslegacy.moviesearch.rest.ApiInterface;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,13 +28,18 @@ public class MovieActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movies_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<MoviesResponse> call = apiService.getTopRatedMovies(TMDB_API_KEY);
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                Log.e(TAG, "response status: "+ response.headers().get("status"));
-                Log.e(TAG, "response value: "+ String.valueOf(response.body().getTotalPages()));
+                //Log.e(TAG, "response status: " + response.headers().get("status"));
+                //Log.e(TAG, "response value: " + String.valueOf(response.body().getTotalPages()));
+                List<Movie> moviesList = response.body().getResults();
+                recyclerView.setAdapter(new MoviesAdapter(moviesList, R.layout.list_item_movie, getApplicationContext()));
             }
 
             @Override
