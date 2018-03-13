@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.devilslegacy.moviesearch.R;
 import com.devilslegacy.moviesearch.adapters.MoviesAdapter;
@@ -28,7 +30,8 @@ public class MovieActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.movies_recycler_view);
+        final ProgressBar progressBar = findViewById(R.id.progress_bar);
+        final RecyclerView recyclerView = findViewById(R.id.movies_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -39,6 +42,7 @@ public class MovieActivity extends Activity {
                 //Log.e(TAG, "response status: " + response.headers().get("status"));
                 //Log.e(TAG, "response value: " + String.valueOf(response.body().getTotalPages()));
                 List<Movie> moviesList = response.body().getResults();
+                progressBar.setVisibility(View.GONE);
                 recyclerView.setAdapter(new MoviesAdapter(moviesList, R.layout.list_item_movie, getApplicationContext()));
             }
 

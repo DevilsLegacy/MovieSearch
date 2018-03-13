@@ -35,12 +35,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
 
         public MovieViewHolder(View itemView) {
             super(itemView);
-            movieLayout = (LinearLayout) itemView.findViewById(R.id.movie_layout);
-            movieBanner = (ImageView) itemView.findViewById(R.id.movie_banner);
-            movieName = (TextView) itemView.findViewById(R.id.movie_name);
-            movieDescription = (TextView) itemView.findViewById(R.id.movie_description);
-            ratingBar = (RatingBar) itemView.findViewById(R.id.rating_bar);
-            movieRating = (TextView) itemView.findViewById(R.id.movie_rating);
+            movieLayout = itemView.findViewById(R.id.movie_layout);
+            movieBanner = itemView.findViewById(R.id.movie_banner);
+            movieName = itemView.findViewById(R.id.movie_name);
+            movieDescription = itemView.findViewById(R.id.movie_description);
+            ratingBar = itemView.findViewById(R.id.rating_bar);
+            movieRating = itemView.findViewById(R.id.movie_rating);
         }
     }
 
@@ -60,7 +60,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     public void onBindViewHolder(MovieViewHolder holder, int position) {
         holder.movieName.setText(movies.get(position).getTitle());
         holder.movieDescription.setText(movies.get(position).getOverview());
-        holder.ratingBar.setRating(movies.get(position).getVoteAverage()/2);
+        holder.ratingBar.setRating(movies.get(position).getVoteAverage() / 2);
         holder.movieRating.setText(movies.get(position).getVoteAverage().toString());
     }
 
