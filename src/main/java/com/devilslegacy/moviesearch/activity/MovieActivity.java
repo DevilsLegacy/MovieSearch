@@ -15,7 +15,9 @@ import com.devilslegacy.moviesearch.model.MoviesResponse;
 import com.devilslegacy.moviesearch.rest.ApiClient;
 import com.devilslegacy.moviesearch.rest.ApiInterface;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,12 +37,15 @@ public class MovieActivity extends Activity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<MoviesResponse> call = apiService.getTopRatedMovies(TMDB_API_KEY);
+        Map<String, String> data = new HashMap<>();
+        data.put("api_key", TMDB_API_KEY);
+        data.put("page", "2");
+        Call<MoviesResponse> call = apiService.getTopRatedMovies(data);
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                //Log.e(TAG, "response status: " + response.headers().get("status"));
-                //Log.e(TAG, "response value: " + String.valueOf(response.body().getTotalPages()));
+                Log.e(TAG, "total results: " + response.body().getTotalResults());
+                Log.e(TAG, "total pages: " + response.body().getTotalPages());
                 List<Movie> moviesList = response.body().getResults();
                 progressBar.setVisibility(View.GONE);
                 recyclerView.setAdapter(new MoviesAdapter(moviesList, R.layout.list_item_movie, getApplicationContext()));
