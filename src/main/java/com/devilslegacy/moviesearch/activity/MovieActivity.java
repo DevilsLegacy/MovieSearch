@@ -39,6 +39,7 @@ public class MovieActivity extends Activity {
     private RecyclerView mRecyclerView;
 
     private int mCurrentPage = 1;
+    private boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class MovieActivity extends Activity {
         mProgressBar = findViewById(R.id.progress_bar);
         mRecyclerView = findViewById(R.id.movies_recycler_view);
 
-        mMoviesAdapter = new MoviesAdapter(R.layout.list_item_movie, this);
+        mMoviesAdapter = new MoviesAdapter(this);
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.addOnScrollListener(new onScrollListener());
@@ -82,8 +83,10 @@ public class MovieActivity extends Activity {
             Log.d(TAG, "totalItemCount : " + totalItemCount + " : visibleItemCount : " +
                     visibleItemCount + " : firstVisibleItemPosition : " + firstVisibleItemPosition);
 
-            if (isScrolling && firstVisibleItemPosition >= 0 && mCurrentPage < TOTAL_PAGES && (visibleItemCount + firstVisibleItemPosition == totalItemCount)) {
-                isScrolling = false;
+            // isLoading check is required as there can be multiple onScroll calls for which
+            // "visibleItemCount + firstVisibleItemPosition == totalItemCount)" can be true for same values.
+            // This can cause IllegalStateException in RecyclerView
+            if (!isLoading && firstVisibleItemPosition >= 0 && mCurrentPage < TOTAL_PAGES && (visibleItemCount + firstVisibleItemPosition == totalItemCount)) {
                 mCurrentPage++;
                 loadMoviePage(mCurrentPage);
             }
@@ -91,6 +94,10 @@ public class MovieActivity extends Activity {
     }
 
     private void loadMoviePage(int pageNumber) {
+        if (mCurrentPage != 1) {
+            isLoading = true;
+            mMoviesAdapter.addFooterItem();
+        }
         mQueryMapData.clear();
         mQueryMapData.put("api_key", TMDB_API_KEY);
         mQueryMapData.put("page", Integer.toString(pageNumber));
@@ -101,6 +108,10 @@ public class MovieActivity extends Activity {
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 Log.d(TAG, "total results: " + response.body().getTotalResults());
                 Log.d(TAG, "total pages: " + response.body().getTotalPages());
+                if (mCurrentPage != 1) {
+                    isLoading = false;
+                    mMoviesAdapter.removeFooterItem();
+                }
                 List<Movie> moviesList = response.body().getResults();
                 mProgressBar.setVisibility(View.GONE);
                 mMoviesAdapter.setMoviesList(moviesList);
@@ -108,7 +119,10 @@ public class MovieActivity extends Activity {
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
-
+                if (mCurrentPage != 1) {
+                    isLoading = false;
+                    mMoviesAdapter.removeFooterItem();
+                }
             }
         });
     }
