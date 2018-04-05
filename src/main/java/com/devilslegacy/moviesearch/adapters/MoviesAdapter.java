@@ -2,6 +2,7 @@ package com.devilslegacy.moviesearch.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.devilslegacy.moviesearch.R;
+import com.devilslegacy.moviesearch.glide.GlideApp;
+import com.devilslegacy.moviesearch.glide.MovieAppGlideModule;
 import com.devilslegacy.moviesearch.model.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +29,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     private int rowLayout;
     private Context context;
 
+    private static String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
+    private static String IMAGE_QUALITY = "w300";
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
         LinearLayout movieLayout;
@@ -44,10 +51,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         }
     }
 
-    public MoviesAdapter(List<Movie> movies, int rowLayout, Context context) {
-        this.movies = movies;
+    public MoviesAdapter(int rowLayout, Context context) {
         this.rowLayout = rowLayout;
         this.context = context;
+        movies = new ArrayList<>();
     }
 
     @Override
@@ -62,10 +69,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         holder.movieDescription.setText(movies.get(position).getOverview());
         holder.ratingBar.setRating(movies.get(position).getVoteAverage() / 2);
         holder.movieRating.setText(movies.get(position).getVoteAverage().toString());
+        GlideApp
+                .with(context)
+                .load(IMAGE_BASE_URL + IMAGE_QUALITY + movies.get(position).getBackdropPath())
+                .placeholder(R.drawable.movie_backdrop_placeholder)
+                .into(holder.movieBanner);
     }
 
     @Override
     public int getItemCount() {
         return movies.size();
+    }
+
+    public void setMoviesList(List<Movie> moviesList) {
+        movies.addAll(moviesList);
+        notifyDataSetChanged();
     }
 }
