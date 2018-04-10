@@ -39,6 +39,11 @@ public class Movie {
     @SerializedName("vote_average")
     private Float voteAverage;
 
+    // Empty Constructor required to initialize movie object for Footer Item.
+    public Movie() {
+
+    }
+
     public Movie(String posterPath, Boolean adult, String overview, String releaseDate, List<Integer> genreIds, Integer id, String originalTitle, String originalLanguage, String title, String backdropPath, Double popularity, Integer voteCount, Boolean video, Float voteAverage) {
         this.posterPath = posterPath;
         this.adult = adult;
