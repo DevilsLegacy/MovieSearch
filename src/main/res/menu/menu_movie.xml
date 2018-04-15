@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Toggle menu to switch between list and grid view. -->
+    <item
+        android:id="@+id/action_toggle_item_view"
+        android:icon="@drawable/ic_view_list"
+        android:orderInCategory="100"
+        android:title="Item View"
+        app:showAsAction="always" />
+</menu>
