@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -30,8 +32,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String IMAGE_QUALITY = "w300";
 
-    private static final int TYPE_FOOTER_ITEM = 0;
-    private static final int TYPE_MOVIE_ITEM = 1;
+    public static final int TYPE_FOOTER_ITEM = 0;
+    public static final int TYPE_MOVIE_ITEM = 1;
 
     private List<Movie> movies;
     private Context context;
@@ -40,6 +42,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     // ViewHolder for Movie Item.
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
+
+        View mRootView;
         LinearLayout movieLayout;
         ImageView movieBanner;
         TextView movieName;
@@ -49,6 +53,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public MovieViewHolder(View itemView) {
             super(itemView);
+            mRootView = itemView;
             movieLayout = itemView.findViewById(R.id.movie_layout);
             movieBanner = itemView.findViewById(R.id.movie_banner);
             movieName = itemView.findViewById(R.id.movie_name);
@@ -86,6 +91,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        Log.d("AGODA", "onBindViewHolder ");
         if (holder instanceof MovieViewHolder) {
             final MovieViewHolder movieViewHolder = (MovieViewHolder) holder;
             movieViewHolder.movieName.setText(movies.get(position).getTitle());
@@ -97,6 +103,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     .load(IMAGE_BASE_URL + IMAGE_QUALITY + movies.get(position).getBackdropPath())
                     .placeholder(R.drawable.movie_backdrop_placeholder)
                     .into(movieViewHolder.movieBanner);
+            //Animation itemShowAnimation = AnimationUtils.loadAnimation(context, R.anim.movie_item_show);
+            //itemShowAnimation.setDuration(300);
+            //movieViewHolder.mRootView.startAnimation(itemShowAnimation);
         }
     }
 
