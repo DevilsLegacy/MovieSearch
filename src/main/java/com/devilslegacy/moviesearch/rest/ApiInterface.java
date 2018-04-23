@@ -1,6 +1,7 @@
 package com.devilslegacy.moviesearch.rest;
 
 import com.devilslegacy.moviesearch.model.MoviesResponse;
+import com.devilslegacy.moviesearch.model.NowPlayingMoviesResponse;
 
 import java.util.Map;
 
@@ -18,6 +19,15 @@ public interface ApiInterface {
 
     @GET("movie/top_rated")
     Call<MoviesResponse> getTopRatedMovies(@QueryMap Map<String, String> options);
+
+    @GET("movie/popular")
+    Call<MoviesResponse> getPopularMovies(@QueryMap Map<String, String> options);
+
+    @GET("movie/now_playing")
+    Call<NowPlayingMoviesResponse> getNowPlayingMovies(@QueryMap Map<String, String> options);
+
+    @GET("movie/upcoming")
+    Call<MoviesResponse> getUpcomingMovies(@QueryMap Map<String, String> options);
 
     @GET("movie/{id}")
     Call<MoviesResponse> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
